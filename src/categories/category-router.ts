@@ -1,3 +1,4 @@
+import { asyncWrapper } from "./../common/utils/wrapper";
 import { CategoryService } from "./categoy-service";
 import express from "express";
 import { CategoryController } from "./category-controller";
@@ -10,6 +11,6 @@ const categoryService = new CategoryService();
 
 const categoryController = new CategoryController(categoryService, logger);
 
-router.post("/", categoryValidator, categoryController.create);
+router.post("/", categoryValidator, asyncWrapper(categoryController.create));
 
 export default router;
