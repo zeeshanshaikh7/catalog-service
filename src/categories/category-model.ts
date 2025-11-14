@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Attribute, PriceConfiguration, Category } from "./category-types";
+import { Category } from "./category-types";
 
-const priceConfigurationSchema = new mongoose.Schema<PriceConfiguration>(
+const priceConfigurationSchema = new mongoose.Schema(
     {
         priceType: {
             type: String,
@@ -16,7 +16,7 @@ const priceConfigurationSchema = new mongoose.Schema<PriceConfiguration>(
     { _id: false },
 );
 
-const attributeSchema = new mongoose.Schema<Attribute>(
+const attributeSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -39,7 +39,7 @@ const attributeSchema = new mongoose.Schema<Attribute>(
     { _id: false },
 );
 
-const categorySchema = new mongoose.Schema<Category>({
+const categorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -55,4 +55,4 @@ const categorySchema = new mongoose.Schema<Category>({
     },
 });
 
-export default mongoose.model("Category", categorySchema);
+export default mongoose.model<Category>("Category", categorySchema);

@@ -1,11 +1,15 @@
 import express, { Request, Response } from "express";
 import { globalErrorHandler } from "./common/middlewares/globalErrorHandler";
+import categoryRouter from "./categories/category-router";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
     res.send(`Running catalog service`);
 });
+
+app.use("/categories", categoryRouter);
 
 app.use(globalErrorHandler);
 
