@@ -59,6 +59,7 @@
         "js-yaml": "^4.1.0",
         "jwks-rsa": "^3.2.0",
         "mongoose": "^8.19.3",
+        "mongoose-paginate-v2": "^1.9.1",
         "uuid": "^9.0.1",
         "winston": "^3.10.0"
     }
