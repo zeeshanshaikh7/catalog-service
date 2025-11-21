@@ -10,6 +10,7 @@ import { asyncWrapper } from "../common/utils/wrapper";
 import { CloudinaryStorage } from "../common/services/cloudinary";
 import fileUpload from "express-fileupload";
 import createHttpError from "http-errors";
+import updateProductValidator from "./update-product-validator";
 
 const router = express.Router();
 
@@ -36,6 +37,22 @@ router.post(
     }),
     createProductValidator,
     asyncWrapper(productController.create),
+);
+
+router.put(
+    "/:productId",
+    authenticate,
+    canAccess([Roles.ADMIN, Roles.MANAGER]),
+    fileUpload({
+        limits: { fileSize: 1024 * 500 },
+        abortOnLimit: true,
+        limitHandler: (req, res, next) => {
+            const error = createHttpError(400, "File size exceeds the limit");
+            next(error);
+        },
+    }),
+    updateProductValidator,
+    asyncWrapper(productController.update),
 );
 
 export default router;
