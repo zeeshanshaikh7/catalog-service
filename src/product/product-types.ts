@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
 
+export interface AttributeValue {
+    name?: string;
+    value?: any;
+}
+
+export interface PriceConfiguration {
+    priceType?: "base" | "aditional";
+    availableOptions?: Map<string, number>;
+}
+
 export interface Product {
     _id?: mongoose.Types.ObjectId;
     name: string;
     description: string;
-    // todo: fix the price configuration type
-    priceConfiguration: string;
-    attributes: string;
+    priceConfiguration?: Map<string, PriceConfiguration>;
+    attributes?: AttributeValue[];
     tenantId: string;
-    categoryId: string;
+    categoryId?: string;
     image: string;
+    isPublish?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface Filter {

@@ -11,7 +11,7 @@ const attributeValueSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
     },
 });
- 
+
 const priceConfigurationSchema = new mongoose.Schema({
     priceType: {
         type: String,
@@ -55,12 +55,15 @@ const productSchema = new mongoose.Schema(
             required: false,
             default: false,
         },
-    },
+    } as any,
     { timestamps: true },
 );
 
 productSchema.plugin(paginate);
+
 export default mongoose.model<Product, mongoose.PaginateModel<Product>>(
     "Product",
     productSchema,
 );
+
+// export default mongoose.model("Product", productSchema);

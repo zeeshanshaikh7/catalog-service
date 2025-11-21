@@ -1,17 +1,24 @@
 {
-    "Size": {
-        "priceType": "base",
-        "availableOptions": {
-            "Small": 400,
-            "Medium": 600,
-            "Large": 800
+    "name": "Yammy pizza",
+    "description": "delicious pizza",
+    "priceConfiguration": {
+        "Size": {
+            "priceType": "base",
+            "availableOptions": {
+                "Small": 400,
+                "Medium": 600,
+                "Large": 800
+            }
+        },
+        "Crust": {
+            "priceType": "additional",
+            "availableOptions": {
+                "Thin": 50,
+                "Thick": 100
+            }
         }
     },
-    "Crust": {
-        "priceType": "additional",
-        "availableOptions": {
-            "Thin": 50,
-            "Thick": 100
-        }
-    }
+    "attributes": [{ "name": "isHit", "value": "Yes" }],
+    "tenantId": 1,
+    "categoryId": "69160b71bfb0b785be48f918"
 }
