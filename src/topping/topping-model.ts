@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Topping } from "./topping-types";
 
-const toppingSchema = new mongoose.Schema<Topping>(
+const toppingSchema = new mongoose.Schema(
     {
         name: {
             type: String,
