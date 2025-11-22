@@ -67,4 +67,8 @@ export class ProductService {
             customLabels: paginationLabels,
         });
     }
+
+    async deleteProduct(productId: string): Promise<Product | null> {
+        return await productModel.findOneAndDelete({ _id: productId });
+    }
 }

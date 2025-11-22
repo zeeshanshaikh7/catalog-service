@@ -94,7 +94,7 @@ export class ProductController {
             return next(createHttpError(403, "Forbidden"));
         }
 
-        let imageName: string | undefined;
+        let imageName: string;
         if (req.files?.image) {
             const oldImage = product.image;
 
@@ -107,6 +107,8 @@ export class ProductController {
             });
 
             await this.storage.delete(oldImage);
+        } else {
+            imageName = product.image;
         }
 
         const {
@@ -135,7 +137,7 @@ export class ProductController {
             tenantId,
             categoryId,
             isPublish,
-            image: imageName ? imageName : product.image,
+            image: imageName,
         };
 
         await this.productService.updateProduct(productId, productData);
@@ -179,7 +181,56 @@ export class ProductController {
             paginateQuery,
         );
 
+        const finalProduct = (products.data as Product[]).map((product) => {
+            return {
+                ...product,
+                image: this.storage.getObjectUri(product.image),
+            };
+        });
+
         this.logger.info(`products has been fetched`);
-        res.json(products);
+        res.json({ ...products, data: finalProduct });
+    };
+
+    getSingleProduct = async (
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ) => {
+        const { productId } = req.params;
+        const product = await this.productService.getProduct(productId);
+        if (!product) {
+            return next(createHttpError(404, "Product not found"));
+        }
+        this.logger.info(`product has been fetched`, product);
+        res.json(product);
+    };
+
+    deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+        const { productId } = req.params;
+
+        const product = await this.productService.getProduct(productId);
+
+        const tenant = (req as AuthRequest).auth.tenant;
+
+        if (
+            product?.tenantId !== String(tenant) &&
+            (req as AuthRequest).auth.role !== Roles.ADMIN
+        ) {
+            return next(createHttpError(403, "Forbidden"));
+        }
+
+        const deletedProduct =
+            await this.productService.deleteProduct(productId);
+
+        if (!deletedProduct) {
+            return next(createHttpError(404, "Product not found"));
+        }
+
+        const oldImage = deletedProduct.image;
+        await this.storage.delete(oldImage);
+
+        this.logger.info(`product has been deleted`, deletedProduct);
+        res.json(deletedProduct);
     };
 }
