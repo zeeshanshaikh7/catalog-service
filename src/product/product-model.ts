@@ -1,5 +1,7 @@
 import paginate from "mongoose-paginate-v2";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 // https://github.com/aravindnc/mongoose-paginate-v2
+// https://github.com/aravindnc/mongoose-aggregate-paginate-v2
 import mongoose from "mongoose";
 import { Product } from "./product-types";
 
@@ -60,10 +62,11 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.plugin(paginate);
+productSchema.plugin(aggregatePaginate);
 
-export default mongoose.model<Product, mongoose.PaginateModel<Product>>(
-    "Product",
-    productSchema,
-);
+export default mongoose.model<
+    Product,
+    mongoose.AggregatePaginateModel<Product>
+>("Product", productSchema);
 
 // export default mongoose.model("Product", productSchema);

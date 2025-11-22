@@ -6,10 +6,11 @@ import { ProductService } from "./product-service";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
-import { Product } from "./product-types";
+import { Filter, PaginateQuery, Product } from "./product-types";
 import { v4 as uuidv4 } from "uuid";
 import { FileStorage } from "../common/types/storage";
 import { AuthRequest, Roles } from "../common/types";
+import mongoose from "mongoose";
 
 export class ProductController {
     constructor(
@@ -145,5 +146,40 @@ export class ProductController {
         // todo: move topic name to the config
 
         res.json({ id: productId });
+    };
+
+    getAll = async (req: Request, res: Response, next: NextFunction) => {
+        const { q, tenantId, categoryId, isPublish, page, limit } = req.query;
+
+        const filters: Filter = {};
+
+        if (isPublish === "true") {
+            filters.isPublish = true;
+        }
+
+        if (tenantId) filters.tenantId = tenantId as string;
+
+        if (
+            categoryId &&
+            mongoose.Types.ObjectId.isValid(categoryId as string)
+        ) {
+            filters.categoryId = new mongoose.Types.ObjectId(
+                categoryId as string,
+            );
+        }
+
+        const paginateQuery: PaginateQuery = {
+            page: parseInt(page as string) || 1,
+            limit: parseInt(limit as string) || 10,
+        };
+
+        const products = await this.productService.getProducts(
+            q as string,
+            filters,
+            paginateQuery,
+        );
+
+        this.logger.info(`products has been fetched`);
+        res.json(products);
     };
 }

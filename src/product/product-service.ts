@@ -1,6 +1,7 @@
 import productModel from "./product-model";
 import { Filter, PaginateQuery, Product } from "./product-types";
-
+import { paginationLabels } from "../config/pagination";
+ 
 export class ProductService {
     async createProduct(product: Product) {
         return (await productModel.create(product)) as Product;
@@ -25,8 +26,7 @@ export class ProductService {
     async getProducts(
         q: string,
         filters: Filter,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _paginateQuery: PaginateQuery,
+        paginateQuery: PaginateQuery,
     ) {
         const searchQueryRegexp = new RegExp(q, "i");
 
@@ -62,6 +62,9 @@ export class ProductService {
             },
         ]);
 
-        return aggregate;
+        return productModel.aggregatePaginate(aggregate, {
+            ...paginateQuery,
+            customLabels: paginationLabels,
+        });
     }
 }
