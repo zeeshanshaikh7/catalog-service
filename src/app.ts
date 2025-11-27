@@ -27,7 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
-app.use("/topping", toppingRouter);
+app.use("/toppings", toppingRouter);
 
 app.use(globalErrorHandler);
 
